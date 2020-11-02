@@ -1,0 +1,47 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "height": 500,
+  "width": 723,
+  "title": "COVID-19 Cases per Country (30 Oct 2020)",
+  "data": {
+    "url": "data/country_wise_with_population.csv"
+  },
+  "mark": "point",
+  "transform": [
+    { "filter": "datum.NewCases > 0" },
+    { "filter": "datum.NewRecovered > 0" },
+    {
+      "calculate": "datum.NewCases - datum.NewRecovered",
+      "as": "NetCases"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "NewCases",
+      "type": "quantitative",
+      "title": "New Cases",
+      "scale": { "type": "log", "domain": [1, 100000] }
+    },
+    "y": {
+      "field": "NewRecovered",
+      "type": "quantitative",
+      "title": "New Recovered",
+      "scale": { "type": "log", "domain": [1, 100000] }
+    },
+    "fill": {
+      "condition": { "test": "datum['NetCases'] <= 0", "value": "green" },
+      "value": "red"
+    },
+    "color": {
+      "condition": { "test": "datum['NetCases'] <= 0", "value": "green" },
+      "value": "red"
+    },
+    "tooltip": [
+      { "field": "Country/Region", "type": "nominal" },
+      { "field": "Confirmed", "type": "quantitative", "format": "," },
+      { "field": "Active", "type": "quantitative", "format": "," },
+      { "field": "Deaths", "type": "quantitative", "format": "," },
+      { "field": "Recovered", "type": "quantitative", "format": "," }
+    ]
+  }
+}
